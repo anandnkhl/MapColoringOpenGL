@@ -26,13 +26,19 @@ void Init(){
 
 void mouse(int button, int press, int mx, int my){
 	if (button == GLUT_LEFT_BUTTON && press == GLUT_DOWN){
-		makeCity(mx, 650-my );
-		cityCount++;
+		if (cityCount <= 10){
+			makeCity(mx, 650-my );
+			cityCount++;
+			cout<<"No of city: "<<cityCount<<endl;
+		}
+		else{ //Draw Lines for Connection
+		}
+
 	}
 	else if (button == GLUT_RIGHT_BUTTON && press == GLUT_DOWN){
-		rightClickx = mx ;
-		rightClicky = 650-my;
-		createGLUTMenus();
+			rightClickx = mx ;
+			rightClicky = 650-my;
+			createGLUTMenus();
 	}
 }
 
@@ -46,10 +52,10 @@ void key( unsigned char key, int x, int y )
 void makeCity(int xcenter, int ycenter){
 	glColor3f(1,1,1);
 	glBegin(GL_LINE_LOOP);
-	   glVertex2f(xcenter - 80, ycenter - 40);
-	   glVertex2f(xcenter + 80, ycenter - 40);
-	   glVertex2f(xcenter + 80, ycenter + 40);
-	   glVertex2f(xcenter - 80, ycenter + 40);
+	   glVertex2f(xcenter - 60, ycenter - 30);
+	   glVertex2f(xcenter + 60, ycenter - 30);
+	   glVertex2f(xcenter + 60, ycenter + 30);
+	   glVertex2f(xcenter - 60, ycenter + 30);
 	glEnd();
 	glFlush();
 }
