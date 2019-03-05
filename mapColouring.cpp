@@ -11,10 +11,24 @@
 using namespace std;
 
 int rightClickx, rightClicky;
-int R = 0, G = 0, B = 0, cityCount = 0;
+int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0;
+int cityInfo[10][5];
+int connection[10][10] = {
+	{0,1,0,0,0,0,0,0,0,0},
+	{1,0,1,0,0,0,1,0,0,0},
+	{0,1,0,1,0,1,0,0,0,0},
+	{0,0,1,0,1,0,0,0,0,0},
+	{0,0,0,1,0,1,0,0,0,1},
+	{0,0,1,0,1,0,1,0,1,1},
+	{0,1,0,0,0,1,0,0,0,0},
+	{0,0,0,0,0,0,0,0,1,0},
+	{0,0,0,0,0,1,0,1,0,1},
+	{0,0,0,0,1,1,0,0,1,0}
+};
 
 void floodFill(int, int);
 void makeCity(int,int);
+void line(int, int,int,int);
 int createGLUTMenus();
 
 void Init(){
@@ -26,12 +40,45 @@ void Init(){
 
 void mouse(int button, int press, int mx, int my){
 	if (button == GLUT_LEFT_BUTTON && press == GLUT_DOWN){
-		if (cityCount <= 10){
+		if (cityCount < 10 && lineCount == 0){
 			makeCity(mx, 650-my );
+			cityInfo[cityCount][0] = cityCount;
+			cityInfo[cityCount][1] = mx - 60;
+			cityInfo[cityCount][2] = 650-my - 30;
+			cityInfo[cityCount][3] = mx + 60;
+			cityInfo[cityCount][4] = 650-my + 30;
 			cityCount++;
 			cout<<"No of city: "<<cityCount<<endl;
 		}
-		else{ //Draw Lines for Connection
+		else if (lineCount < 13){ 
+			switch(first)
+		        {
+		        case 0:
+		        {
+		                x1 = mx;
+		                y1 = (650-my);
+		                first = 1;
+		                break;
+		        }
+		        case 1:
+		        {
+		                x2 = mx;
+		                y2 = (650-my);
+		                line ( x1, y1, x2, y2);
+		                first = 0;
+				lineCount++;
+				cout<<"No of Connection: "<<lineCount<<endl;
+		                break;
+		        }
+		        }
+		}
+		else{
+			for (int i = 0; i < 10; i++){
+				for (int j = 0; j < 5; j++){
+					cout<< cityInfo[i][j]<<" ";
+				}
+				cout<<endl;
+			}
 		}
 
 	}
@@ -58,6 +105,15 @@ void makeCity(int xcenter, int ycenter){
 	   glVertex2f(xcenter - 60, ycenter + 30);
 	glEnd();
 	glFlush();
+}
+void line(int a, int b,int c,int d)
+{
+ 
+ glBegin(GL_LINES);
+ glVertex2i(a,b);
+ glVertex2i(c,d);
+ glEnd();
+ glFlush();
 }
 
 void processMenuEvents(int option) {
