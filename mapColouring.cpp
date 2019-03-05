@@ -1,3 +1,5 @@
+
+//Open GL Libraries
 #include<iostream>
 #include<GL/glut.h>
 #include<string.h>
@@ -6,13 +8,12 @@
 #define RED 1
 #define GREEN 2
 #define BLUE 3
-#define ORANGE 4
 
 using namespace std;
 
 int rightClickx, rightClicky;
-int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0;
-int cityInfo[10][5];
+int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0, id = 0;
+int cityInfo[10][6];
 int connection[10][10] = {
 	{0,1,0,0,0,0,0,0,0,0},
 	{1,0,1,0,0,0,1,0,0,0},
@@ -29,6 +30,7 @@ int connection[10][10] = {
 void floodFill(int, int);
 void makeCity(int,int);
 void line(int, int,int,int);
+int checkId(int , int);
 int createGLUTMenus();
 
 void Init(){
@@ -47,6 +49,7 @@ void mouse(int button, int press, int mx, int my){
 			cityInfo[cityCount][2] = 650-my - 30;
 			cityInfo[cityCount][3] = mx + 60;
 			cityInfo[cityCount][4] = 650-my + 30;
+			cityInfo[cityCount][5] = 0;
 			cityCount++;
 			cout<<"No of city: "<<cityCount<<endl;
 		}
@@ -85,7 +88,9 @@ void mouse(int button, int press, int mx, int my){
 	else if (button == GLUT_RIGHT_BUTTON && press == GLUT_DOWN){
 			rightClickx = mx ;
 			rightClicky = 650-my;
+			id = checkId(rightClickx, rightClicky);			
 			createGLUTMenus();
+			
 	}
 }
 
@@ -116,6 +121,18 @@ void line(int a, int b,int c,int d)
  glFlush();
 }
 
+int checkId(int x, int y)
+{
+	for(int i=0;i<10;i++)
+	{
+		if (x >= cityInfo[i][1] && y >= cityInfo[i][2] && x <= cityInfo[i][3] && y <= cityInfo[i][4])
+			{
+				cout<<"City Id = "<<i<<endl;				
+				return i;
+			}	
+	
+	}
+}
 void processMenuEvents(int option) {
 
 float red, green, blue;
@@ -125,13 +142,14 @@ float red, green, blue;
 			cout<<"Red is selected"<<endl;
 			R = 0, G = 0, B = 0;
 			glColor3f(1,0,0);
+			cityInfo[id][5] = 1;
 			floodFill(rightClickx, rightClicky);
-			
 			break;
 		case GREEN :
 			cout<<"Green is selected"<<endl;
 			R = 0, G = 0, B = 0;
 			glColor3f(0,1,0);
+			cityInfo[id][5] = 2;
 			floodFill(rightClickx, rightClicky);
 			//glutDetachMenu(GLUT_RIGHT_BUTTON);
 			break;
@@ -139,6 +157,7 @@ float red, green, blue;
 			cout<<"Blue is selected"<<endl;
 			R = 0, G = 0, B = 0;
 			glColor3f(0,0,1);
+			cityInfo[id][5] = 3;
 			floodFill(rightClickx, rightClicky);
 			//glutDetachMenu(GLUT_RIGHT_BUTTON);
 			break;
@@ -209,7 +228,7 @@ int main(int argc, char **argv){
 	glutInit(&argc, argv);//Initialize window
 	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB); //Single Window
 	glutInitWindowSize(1050, 650); //Initialize the size of Window
-	glutInitWindowPosition(100, 0); //Initial position of the window
+	glutInitWindowPosition(0, 0); //Initial position of the window
 	glutCreateWindow("Map Colouring"); //Name of the Window
 	Init();
 	glutMouseFunc(mouse);
@@ -218,3 +237,5 @@ int main(int argc, char **argv){
 	glutMainLoop();
 	return 0;
 }
+
+    
