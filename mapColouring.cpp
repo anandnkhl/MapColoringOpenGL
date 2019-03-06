@@ -21,6 +21,7 @@ void line(int, int,int,int);
 int checkId(int , int);
 int createGLUTMenus();
 void checkAdjacent(int);
+void cityName(int, int, int);
 
 void Init(){
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -34,9 +35,24 @@ void Init(){
 	}
 }
 
+void mouseMove(int mx, int my) {
+	glutDetachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void print_name(char string[],float x,float y) 
+{  
+	glRasterPos2f(x, y);
+
+	for (int c= 0; c <= strlen(string); c++) 
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, string[c]);
+	}
+}
+
 void mouse(int button, int press, int mx, int my){
 	if (button == GLUT_LEFT_BUTTON && press == GLUT_DOWN){
 		if (cityCount < 10 && lineCount == 0){
+			cityName(cityCount, mx - 40, 690 - my);
 			makeCity(mx, 650-my);
 			cityInfo[cityCount][0] = cityCount;
 			cityInfo[cityCount][1] = mx - 60;
@@ -77,6 +93,7 @@ void mouse(int button, int press, int mx, int my){
 		        }
 		}
 		else{
+			
 			for (int i = 0; i < 10; i++){
 				for (int j = 0; j < 9; j++){
 					cout<< cityInfo[i][j]<<" ";
@@ -101,12 +118,6 @@ void mouse(int button, int press, int mx, int my){
 	}
 }
 
-void key( unsigned char key, int x, int y )
-{
-	if (key == 13) { 
-		glutDetachMenu(GLUT_RIGHT_BUTTON);
-	}
-}
 
 void makeCity(int xcenter, int ycenter){
 	glColor3f(1,1,1);
@@ -145,7 +156,6 @@ int checkId(int x, int y)
 	}
 }
 void processMenuEvents(int option) {
-
 float red, green, blue;
 
 	switch (option) {
@@ -180,6 +190,7 @@ float red, green, blue;
 			break;
 	}
 }
+
 void checkAdjacent(int city_id)
 {
 	for(int i =0;i<10;i++)
@@ -224,15 +235,25 @@ int createGLUTMenus() {
 				
 				glutAddMenuEntry("BLUE",BLUE);
 			}
-	//add entries to our menu
-	
-	
-	
-
 	// attach the menu to the right button
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 return 0;
+}
+
+void cityName(int local, int xPos, int yPos){
+	switch(local){
+		case 0:{ print_name("Shimla", xPos, yPos); break;  }
+		case 1:{ print_name("Chakrata", xPos, yPos); break;  }
+		case 2:{ print_name("Mussoorie", xPos, yPos); break;  }
+		case 3:{ print_name("Chamba", xPos, yPos); break;  }
+		case 4:{ print_name("Rishikesh", xPos, yPos); break;  }
+		case 5:{ print_name("Dehradun", xPos, yPos); break;  }
+		case 6:{ print_name("Vikashnagar", xPos, yPos); break;  }
+		case 7:{ print_name("Delhi", xPos, yPos); break;  }
+		case 8:{ print_name("Roorkee", xPos, yPos); break;  }
+		case 9:{ print_name("Haridwar", xPos, yPos); break;  }
+	}
 }
 
 int check(int x2, int y2){
@@ -283,7 +304,7 @@ int main(int argc, char **argv){
 	glutCreateWindow("Map Colouring"); //Name of the Window
 	Init();
 	glutMouseFunc(mouse);
-	glutKeyboardFunc(key);
+	glutPassiveMotionFunc(mouseMove);
 	glutDisplayFunc(myDisplay);
 	glutMainLoop();
 	return 0;
