@@ -1,4 +1,3 @@
-
 //Open GL Libraries
 #include<iostream>
 #include<GL/glut.h>
@@ -13,21 +12,9 @@ using namespace std;
 
 
 int rightClickx, rightClicky;
-int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0, id = 0;
+int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0, id = 0, firstConnCity = 0, secondConnCity = 0;
 int cityInfo[10][9];
-int connection[10][10] = {
-	{0,1,0,0,0,0,0,0,0,0},
-	{1,0,1,0,0,0,1,0,0,0},
-	{0,1,0,1,0,1,0,0,0,0},
-	{0,0,1,0,1,0,0,0,0,0},
-	{0,0,0,1,0,1,0,0,0,1},
-	{0,0,1,0,1,0,1,0,1,1},
-	{0,1,0,0,0,1,0,0,0,0},
-	{0,0,0,0,0,0,0,0,1,0},
-	{0,0,0,0,0,1,0,1,0,1},
-	{0,0,0,0,1,1,0,0,1,0}
-};
-
+int connection[10][10];
 void floodFill(int, int);
 void makeCity(int,int);
 void line(int, int,int,int);
@@ -40,6 +27,11 @@ void Init(){
 	glClearColor(0.0f, 0.0f, 0.0f,0.0f);
 	gluOrtho2D(0,1050,0,650);
 	glFlush();
+	for (int i = 0; i< 10; i++){
+		for (int j = 0; j < 10; j++){
+			connection[i][j] = 0;
+		}
+	}
 }
 
 void mouse(int button, int press, int mx, int my){
@@ -61,29 +53,39 @@ void mouse(int button, int press, int mx, int my){
 		else if (lineCount < 13){ 
 			switch(first)
 		        {
-		        case 0:
-		        {
-		                x1 = mx;
-		                y1 = (650-my);
-		                first = 1;
-		                break;
-		        }
-		        case 1:
-		        {
-		                x2 = mx;
-		                y2 = (650-my);
-		                line ( x1, y1, x2, y2);
-		                first = 0;
-				lineCount++;
-				cout<<"No of Connection: "<<lineCount<<endl;
-		                break;
-		        }
+				case 0:
+				{
+				        x1 = mx;
+				        y1 = (650-my);
+				        first = 1;
+					firstConnCity = checkId(x1,y1);
+				        break;
+				}
+				case 1:
+				{
+				        x2 = mx;
+				        y2 = (650-my);
+					secondConnCity = checkId(x2,y2);
+				        line ( x1, y1, x2, y2);
+					connection[firstConnCity][secondConnCity] = 1;
+					connection[secondConnCity][firstConnCity] = 1;
+				        first = 0;
+					lineCount++;
+					cout<<"No of Connection: "<<lineCount<<endl;
+				        break;
+				}
 		        }
 		}
 		else{
 			for (int i = 0; i < 10; i++){
 				for (int j = 0; j < 9; j++){
 					cout<< cityInfo[i][j]<<" ";
+				}
+				cout<<endl;
+			}
+			for (int i = 0; i< 10; i++){
+				for (int j = 0; j < 10; j++){
+					cout<< connection[i][j]<<" ";
 				}
 				cout<<endl;
 			}
@@ -102,7 +104,7 @@ void mouse(int button, int press, int mx, int my){
 void key( unsigned char key, int x, int y )
 {
 	if (key == 13) { 
-		glutDetachMenu(GLUT_RIGHT_BUTTON);; 
+		glutDetachMenu(GLUT_RIGHT_BUTTON);
 	}
 }
 
@@ -286,5 +288,3 @@ int main(int argc, char **argv){
 	glutMainLoop();
 	return 0;
 }
-
-    
