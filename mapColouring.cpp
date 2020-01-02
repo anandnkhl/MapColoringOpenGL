@@ -1,4 +1,3 @@
-//Open GL Libraries
 #include<iostream>
 #include<GL/glut.h>
 #include<string.h>
@@ -11,10 +10,10 @@
 using namespace std;
 
 
-int rightClickx, rightClicky;
+int rightClickx, rightClicky; //To store the coordinates of mouse click
 int R = 0, G = 0, B = 0, cityCount = 0, lineCount = 0, first = 0,  x1 = 0,x2 = 0, y1 = 0, y2 = 0, id = 0, firstConnCity = 0, secondConnCity = 0;
-int cityInfo[10][9];
-int connection[10][10];
+int cityInfo[10][9];    //Various Information of cities (like area, colour, etc)
+int connection[10][10]; //Adjacency Matrix of connected cities. 
 void floodFill(int, int);
 void makeCity(int,int);
 void line(int, int,int,int);
